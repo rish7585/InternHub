@@ -1,52 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { Database } from '@sqlitecloud/drivers';
 import './App.css';
 import logo from './internhub-logo.png';
 import ThankYou from './ThankYou';
-
-const db = new Database("sqlitecloud://conun07anz.g1.sqlite.cloud:8860/chinook.sqlite?apikey=ly9HAeqcPnNqrMfP72vG4lyrRV9tqsF3byAC1u1YFa8");
 
 function HomePage() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
-  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
-    
     try {
-      console.log('Creating table if not exists...');
-      // Create waitlist table if it doesn't exist
-      await db.sql`
-        CREATE TABLE IF NOT EXISTS waitlist (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          email TEXT UNIQUE NOT NULL,
-          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-      `;
-      console.log('Table created/verified');
-
-      console.log('Inserting email:', email);
-      // Insert email into waitlist
-      await db.sql`
-        INSERT INTO waitlist (email) VALUES (${email})
-      `;
-      console.log('Email inserted successfully');
-
-      localStorage.setItem('waitlistEmail', email);
-      navigate('/thank-you');
-    } catch (error) {
-      console.error('Error in form submission:', error);
-      setError(error.message);
-      if (error.message.includes('UNIQUE constraint failed')) {
-        alert('This email is already in our waitlist!');
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.message || 'Error adding email to waitlist.');
       } else {
-        alert('Error adding email to waitlist. Please try again.');
+        localStorage.setItem('waitlistEmail', email);
+        navigate('/thank-you');
       }
+    } catch (error) {
+      alert('Error connecting to server.');
     } finally {
       setIsLoading(false);
     }

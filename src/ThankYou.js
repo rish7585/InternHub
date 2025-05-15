@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Database } from '@sqlitecloud/drivers';
 import './App.css';
-
-const db = new Database("sqlitecloud://conun07anz.g1.sqlite.cloud:8860/chinook.sqlite?apikey=ly9HAeqcPnNqrMfP72vG4lyrRV9tqsF3byAC1u1YFa8");
 
 function ThankYou() {
   const [email, setEmail] = useState('');
@@ -18,15 +15,14 @@ function ThankYou() {
     }
     setIsVisible(true);
 
-    // Fetch all stored emails
+    // Fetch all stored emails from backend
     const fetchEmails = async () => {
       try {
-        console.log('Attempting to fetch emails...');
-        const result = await db.sql`SELECT email, created_at FROM waitlist ORDER BY created_at DESC`;
-        console.log('Query result:', result);
-        setStoredEmails(result);
+        const res = await fetch('/api/waitlist');
+        if (!res.ok) throw new Error('Failed to fetch emails');
+        const data = await res.json();
+        setStoredEmails(data);
       } catch (error) {
-        console.error('Error fetching emails:', error);
         setError(error.message);
       }
     };
@@ -50,8 +46,6 @@ function ThankYou() {
               We'll send updates to: <strong>{email}</strong>
             </p>
           )}
-          
-          {/* Display stored emails */}
           <div className="stored-emails">
             <h3>All Waitlist Emails:</h3>
             {error ? (
@@ -73,7 +67,6 @@ function ThankYou() {
               </div>
             )}
           </div>
-
           <Link to="/" className="cta-btn">Back to Home</Link>
         </div>
       </section>
