@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './App.css';
 
+const API_URL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5001/api/waitlist'
+    : 'https://your-backend.onrender.com/api/waitlist';
+
 function ThankYou() {
   const [email, setEmail] = useState('');
   const [isVisible, setIsVisible] = useState(false);
@@ -10,15 +15,13 @@ function ThankYou() {
 
   useEffect(() => {
     const savedEmail = localStorage.getItem('waitlistEmail');
-    if (savedEmail) {
-      setEmail(savedEmail);
-    }
+    if (savedEmail) setEmail(savedEmail);
     setIsVisible(true);
 
     // Fetch all stored emails from backend
     const fetchEmails = async () => {
       try {
-        const res = await fetch('/api/waitlist');
+        const res = await fetch(API_URL);
         if (!res.ok) throw new Error('Failed to fetch emails');
         const data = await res.json();
         setStoredEmails(data);

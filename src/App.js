@@ -4,6 +4,11 @@ import './App.css';
 import logo from './internhub-logo.png';
 import ThankYou from './ThankYou';
 
+const API_URL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5001/api/waitlist'
+    : 'https://your-backend.onrender.com/api/waitlist';
+
 function HomePage() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -13,7 +18,7 @@ function HomePage() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await fetch('/api/waitlist', {
+      const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

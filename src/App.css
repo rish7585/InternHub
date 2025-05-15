@@ -282,3 +282,9 @@ button:disabled {
   color: #888;
   font-size: 0.9rem;
 }
+
+.email-item .name {
+  color: #00c6a7;
+  font-weight: 600;
+  margin-right: 1rem;
+}
