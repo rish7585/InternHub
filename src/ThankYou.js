@@ -49,27 +49,6 @@ function ThankYou() {
               We'll send updates to: <strong>{email}</strong>
             </p>
           )}
-          <div className="stored-emails">
-            <h3>All Waitlist Emails:</h3>
-            {error ? (
-              <p className="error-message">Error: {error}</p>
-            ) : (
-              <div className="email-list">
-                {storedEmails.length === 0 ? (
-                  <p>No emails in the waitlist yet.</p>
-                ) : (
-                  storedEmails.map((item, index) => (
-                    <div key={index} className="email-item">
-                      <span className="email">{item.email}</span>
-                      <span className="date">
-                        {new Date(item.created_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
           <Link to="/" className="cta-btn">Back to Home</Link>
         </div>
       </section>
