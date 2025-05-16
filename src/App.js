@@ -40,7 +40,6 @@ function HomePage() {
   return (
     <div className="App">
       <section className="hero">
-        <img src={logo} className="logo" alt="InternHub Logo" />
         <h1>InternHub</h1>
         <p className="subtitle">Connect with interns, make friends, and explore your city together.</p>
         <a className="cta-btn" href="#waitlist">Join the Waitlist</a>
