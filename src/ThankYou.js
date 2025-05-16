@@ -5,7 +5,7 @@ import './App.css';
 const API_URL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:5001/api/waitlist'
-    : 'https://your-backend.onrender.com/api/waitlist';
+    : 'https://api.internhub.us/api/waitlist';
 
 function ThankYou() {
   const [email, setEmail] = useState('');
