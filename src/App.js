@@ -7,7 +7,7 @@ import ThankYou from './ThankYou';
 const API_URL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:5001/api/waitlist'
-    : 'https://api.internhub.us';
+    : 'https://api.internhub.us/api/waitlist';
 
 function HomePage() {
   const navigate = useNavigate();
