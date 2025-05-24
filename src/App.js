@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import './App.css';
 import logo from './internhub-logo.png';
@@ -13,6 +13,23 @@ function HomePage() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropdownOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,6 +76,81 @@ function HomePage() {
           <div className="feature">
             <h3>Make Memories</h3>
             <p>Create unforgettable moments with your new community.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="features-grid-section dropdown">
+        <button
+          className="dropdown-toggle"
+          onClick={() => setDropdownOpen((open) => !open)}
+          aria-expanded={dropdownOpen}
+          aria-controls="features-dropdown"
+          type="button"
+        >
+          See all features <span className={`dropdown-chevron${dropdownOpen ? ' open' : ''}`}>▼</span>
+        </button>
+        {dropdownOpen && <div className="dropdown-backdrop" />}
+        <div
+          className={`features-grid dropdown-content${dropdownOpen ? ' open' : ''}`}
+          id="features-dropdown"
+          ref={dropdownRef}
+          style={{ pointerEvents: dropdownOpen ? 'auto' : 'none' }}
+        >
+          <button className="dropdown-close" onClick={() => setDropdownOpen(false)} aria-label="Close features dropdown">×</button>
+          <div className="feature-category">
+            <h3>👥 Profile & Discovery</h3>
+            <ul>
+              <li>Personal profile with school and internship details</li>
+              <li>City and interests matching</li>
+              <li>Activity preferences (coffee, events, gym)</li>
+              <li>Profile customization</li>
+            </ul>
+          </div>
+          <div className="feature-category">
+            <h3>🌐 Social Feed</h3>
+            <ul>
+              <li>Share lifestyle updates with photos</li>
+              <li>Create and join events</li>
+              <li>Start discussions and polls</li>
+              <li>Interactive Q&A threads</li>
+            </ul>
+          </div>
+          <div className="feature-category">
+            <h3>🔍 Smart Search</h3>
+            <ul>
+              <li>Find people by company or school</li>
+              <li>Location-based discovery</li>
+              <li>Interest matching</li>
+              <li>Event type filtering</li>
+            </ul>
+          </div>
+          <div className="feature-category">
+            <h3>🗓️ Event Discovery</h3>
+            <ul>
+              <li>RSVP to local events</li>
+              <li>See who's attending</li>
+              <li>Map integration</li>
+              <li>Calendar sync</li>
+            </ul>
+          </div>
+          <div className="feature-category">
+            <h3>🛏️ Roommate Finder</h3>
+            <ul>
+              <li>Budget and location matching</li>
+              <li>Lifestyle compatibility</li>
+              <li>Direct messaging</li>
+              <li>Detailed roommate profiles</li>
+            </ul>
+          </div>
+          <div className="feature-category">
+            <h3>💼 Intern Resources</h3>
+            <ul>
+              <li>Company-specific channels</li>
+              <li>Local city guides</li>
+              <li>Transportation tips</li>
+              <li>Intern survival guides</li>
+            </ul>
           </div>
         </div>
       </section>
